@@ -86,7 +86,7 @@ pipeline {
             bat "docker image rm %DOCKER_REPO%:%IMAGE_TAG% || exit 0"
         }
     }
-}
+
 
 
 
