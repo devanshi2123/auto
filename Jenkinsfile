@@ -55,7 +55,8 @@ pipeline {
                           set AWS_ACCESS_KEY_ID=%AWS_ACCESS_KEY_ID%
                           set AWS_SECRET_ACCESS_KEY=%AWS_SECRET_ACCESS_KEY%
                           terraform init -input=false
-                          terraform plan -var="docker_image=%DOCKER_REPO%:%IMAGE_TAG%" -out=tfplan
+                          terraform plan -var="docker_image=devanshi2123/flask-app:8-a388b90" -var="key_name=project2_docker" -out=tfplan
+                        //   terraform plan -var="docker_image=%DOCKER_REPO%:%IMAGE_TAG%" -out=tfplan
                           terraform apply -input=false -auto-approve tfplan
                         """
                     }
