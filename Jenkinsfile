@@ -12,17 +12,17 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '20'))
         timeout(time: 60, unit: 'MINUTES')
     }
-    stage('Checkout') {
-        steps {
-            checkout scm
-            script {
-                // Windows-safe Git short SHA
-                env.SHORT_SHA = bat(script: 'git rev-parse --short HEAD', returnStdout: true).trim().tokenize('\r\n')[-1]
-                env.IMAGE_TAG = "${BUILD_NUMBER}-${SHORT_SHA}"
+        stage('Checkout') {
+            steps {
+                checkout scm
+                script {
+                    // Windows-safe Git short SHA
+                    env.SHORT_SHA = bat(script: 'git rev-parse --short HEAD', returnStdout: true).trim().tokenize('\r\n')[-1]
+                    env.IMAGE_TAG = "${BUILD_NUMBER}-${SHORT_SHA}"
+                }
+                echo "Image tag will be: ${IMAGE_TAG}"
             }
-            echo "Image tag will be: ${IMAGE_TAG}"
         }
-    }
 
     // stages {
     //     stage('Checkout') {
