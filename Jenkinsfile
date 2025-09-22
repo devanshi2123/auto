@@ -12,19 +12,30 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '20'))
         timeout(time: 60, unit: 'MINUTES')
     }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-                script {
-                    // Git short SHA on Windows
-                    env.SHORT_SHA = bat(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-                    env.IMAGE_TAG = "${env.BUILD_NUMBER}-${env.SHORT_SHA}"
-                }
-                echo "Image tag will be: ${IMAGE_TAG}"
+    stage('Checkout') {
+        steps {
+            checkout scm
+            script {
+                // Windows-safe Git short SHA
+                env.SHORT_SHA = bat(script: 'git rev-parse --short HEAD', returnStdout: true).trim().tokenize('\r\n')[-1]
+                env.IMAGE_TAG = "${BUILD_NUMBER}-${SHORT_SHA}"
             }
+            echo "Image tag will be: ${IMAGE_TAG}"
         }
+    }
+
+    // stages {
+    //     stage('Checkout') {
+    //         steps {
+    //             checkout scm
+    //             script {
+    //                 // Git short SHA on Windows
+    //                 env.SHORT_SHA = bat(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+    //                 env.IMAGE_TAG = "${env.BUILD_NUMBER}-${env.SHORT_SHA}"
+    //             }
+    //             echo "Image tag will be: ${IMAGE_TAG}"
+    //         }
+    //     }
 
         stage('Build Docker Image') {
             steps {
